@@ -1,21 +1,21 @@
-import game, heroes
+import game
 import time
 
 class Model:
   def __init__(self):
-    pass
+    return
   
-  def Actions(self, state, player):
+  def Actions(self, state):
     possible_actions = []
-    if state.players[player].gold >= 4 and state.players[player].level < 9:
+    if state.gold >= 4 and state.level < 9:
       possible_actions.append("buyXP")
-    if state.players[player].gold >= 2:
+    if state.gold >= 2:
       possible_actions.append("rerollShop")
-    if len(state.players[player].bench) < 10 and state.players[player].gold > 0:
+    if len(state.bench) < 10 and state.gold > 0:
       possible_actions.append("buyHero")
-    if len(state.players[player].board) < state.players[player].level:
+    if len(state.board) < state.level:
       possible_actions.append("placeHero")
-    if len(state.players[player].bench) > 0 and len(state.players[player].board) > 0:
+    if len(state.bench) > 0 and len(state.board) > 0:
       possible_actions.append("swapHero")
     possible_actions.append("endTurn")
     return possible_actions
@@ -52,32 +52,3 @@ class Model:
     if desired_total >= current_total:
       return True
     return False
-  
-  def getPercepts(self):
-    # return all info about current state of environment for the agent to be able to configure current copy of model 
-    pass
-  
-  
-def main():
-  agent = game.TFT()
-  game.intro()
-  # agent.givePlayersShop()
-  # agent.startGameForPlayers()
-  # print(agent.players)
-  for player in agent.players:
-    if player.name == 0:
-      start_round_time = time.time()
-      game.roundStart(agent.round)
-      game.userInfo(player)
-      while game.userPrompts(agent.round, player) != False:
-        game.userPrompts(agent.round, player)
-      
-      if start_round_time - time.time() > 30:
-        print("Battle!")
-    
-    agent.battle()
-    agent.round+=1
-      
-    heroes.buyHero(player, player.shop[0])
-if __name__ == "__main__":
-  main()

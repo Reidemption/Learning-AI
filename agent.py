@@ -1,45 +1,41 @@
 import model
 import random
+import game
 
-class Environment: 
-  def __init__(self) -> None:
-    self.moves = 0
-    self.max_moves = 5 #picked an arbitrary number here.
-  
-  def done(self):
-    if self.moves > self.max_moves:
-      self.moves = 0
-      return True
-    return False
-  
+# TODO: flesh this out:
+# main, agent, environment, model, and displayPerformanceMeasure are all needed.
+# run agent.py
   
 class Agent:
   def __init__(self):
     self.model = model.Model()
     
-  def agentFunction(self, percepts):
-    self.model.updateFromPercepts(percepts)
-    actions = self.model.getActions()
+  def decideAction(self, percepts):
+    actions = self.model.Actions(percepts)
     action = random.choice(actions)
     return action
   
 def main():
-  env = Environment() # assumes environment is randomly populated among possible environments.
+  env = game.Environment() # assumes environment is randomly populated among possible environments.
   agent = Agent() # assumes random agent class exists.
   agent2 = Agent() # multi agent environment
-  while not env.done():
-      #env.showState()
-      percepts = env.getObservablePercepts()
-      action = agent.agentFunction(percepts)
+  while not env.done:
+      # env.showState()
+      percepts = env.getPercepts(0)
+      action = agent.decideAction(percepts)
+      print(action)
       #print(action)
-      env.applyAction(action)
+      env.applyAction(0,action)
+      env.battle()
+      if env.GoalTest(0):
+        env.done = True
+      
       
       #percepts = env.getObservablePercepts()
       #action2 = agent2.agentFunction(percepts)
       #env.applyAction(action2)
       
-      env.timeStepUpdate()
-  displayPerformanceMeasure(env, agent)
+  # displayPerformanceMeasure(env, agent)
   #displayPerformanceMeasure(env, agent2)
 
   return

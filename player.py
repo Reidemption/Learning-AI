@@ -1,6 +1,5 @@
-import game
-
-class Player(game.TFT): 
+import game, random
+class Player(): 
   def __init__(self, name):
     self.gold = 5
     self.xp = 8
@@ -17,6 +16,15 @@ class Player(game.TFT):
       return
     self.gold -= 4
     self.xp += 4
+    
+  def buyHero(self):
+    for hero in self.shop:
+      if hero not in self.board and self.gold >= hero['cost'] and len(self.bench) <= self.level+1:
+        print(hero['name'], 'costs', hero['cost'], 'gold and player has now:', self.gold)
+        self.gold -= hero['cost']
+        self.bench.append(hero)
+      else:
+        print('no one purchased')
     
   def getLevel(self):
     if self.xp == 0:
@@ -42,11 +50,22 @@ class Player(game.TFT):
     if self.gold < 2:
       return
     self.gold -= 2
-    self.shop = game.TFT.generateUserShop(self.level)
+    
+  def endTurn(self):
+    return
 
-  def placeHero(self, hero):
+  def placeHero(self):
+    hero = random.choice(self.bench)
     self.board.append(hero)
     self.bench.pop(self.bench.index(hero))
+  
+  def swapHero(self):
+    hero1 = random.choice(self.board)
+    hero2 = random.choice(self.bench)
+    self.board.pop(self.board.index(hero1))
+    self.bench.pop(self.bench.index(hero2))
+    self.board.append(hero2)
+    self.bench.append(hero1)
   
   def getCurrentBoard(self):
     return self.board
