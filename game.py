@@ -151,13 +151,11 @@ class Environment:
       self.cost5[index]['current'] += 1
   
   def applyAction(self, player_index, action):
-    # applyStringAction(self.players[player_index], action)
     if action == 'rerollShop':
       self.players[player_index].shop = self.generateUserShop(self.players[player_index], True )
     else:
       callableAction = getattr(self.players[player_index], action)
       callableAction()
-    print('gold:',self.players[player_index].gold)
   
   def Result(self, player, action):
     # TODO: mess with later when we have a better idea of how Curtis wants this used.
@@ -177,13 +175,11 @@ class Environment:
     
     return new_state
   
-  def GoalTest(self, player_index):
+  def GoalTest(self):
     
-    if self.players[player_index].gold >= 50:
-      print('Player', player_index, 'has more than 50 gold')
-      return True
-      
     if (self.players[0].health == 0 or self.players[1].health == 0):
+      print("Player 1 has", self.players[0].health, "health left.")
+      print("Player 2 has", self.players[1].health, "health left.")
       return True
     return False
   

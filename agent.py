@@ -26,7 +26,7 @@ def main():
       env.battle()
       for player in env.players:
         env.generateUserShop(player)
-      if env.GoalTest(0):
+      if env.GoalTest():
         env.done = True
       
       
