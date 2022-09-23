@@ -179,7 +179,11 @@ class Environment:
   
   def GoalTest(self, player_index):
     
-    if self.players[player_index].gold >= 50 and self.players[player_index].level == len(self.players[player_index].board) or (self.players[0].health == 0 or self.players[1].health == 0):
+    if self.players[player_index].gold >= 50:
+      print('Player', player_index, 'has more than 50 gold')
+      return True
+      
+    if (self.players[0].health == 0 or self.players[1].health == 0):
       return True
     return False
   
@@ -197,8 +201,12 @@ def combat(player1, player2):
   for hero in defending_board:
     player2_hero_total += hero['cost']
   
-  if player1_hero_total > player2_hero_total:
+  # random number between 0 and 1
+  winner = random.random()
+  
+  if winner < .5:
     print(f'{player1.name} wins the round!')
+    print(f'{player1.name} has {player1.health} and {player2.name} has {player2.health}')
     earned_gold = earnedGold(player1, True)
     player1.earnGold(earned_gold)
     player2_gold = earnedGold(player2, False)

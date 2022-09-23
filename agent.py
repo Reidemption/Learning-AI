@@ -2,9 +2,6 @@ import model
 import random
 import game
 
-# TODO: flesh this out:
-# main, agent, environment, model, and displayPerformanceMeasure are all needed.
-# run agent.py
   
 class Agent:
   def __init__(self):
@@ -27,6 +24,8 @@ def main():
       #print(action)
       env.applyAction(0,action)
       env.battle()
+      for player in env.players:
+        env.generateUserShop(player)
       if env.GoalTest(0):
         env.done = True
       

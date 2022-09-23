@@ -18,13 +18,19 @@ class Player():
     self.xp += 4
     
   def buyHero(self):
+    if len(self.shop) == 0:
+      print('empty shop')
     for hero in self.shop:
-      if hero not in self.board and self.gold >= hero['cost'] and len(self.bench) <= self.level+1:
+      if hero not in self.board and hero not in self.bench and self.gold >= hero['cost'] and len(self.bench) <= self.level+1:
         print(hero['name'], 'costs', hero['cost'], 'gold and player has now:', self.gold)
         self.gold -= hero['cost']
         self.bench.append(hero)
+        print(self.bench)
+        print(self.board)
       else:
         print('no one purchased')
+    if len(self.board) < self.level:
+      self.placeHero()
     
   def getLevel(self):
     if self.xp == 0:
@@ -60,12 +66,17 @@ class Player():
     self.bench.pop(self.bench.index(hero))
   
   def swapHero(self):
+    print(self.board)
+    print(self.bench)
     hero1 = random.choice(self.board)
     hero2 = random.choice(self.bench)
     self.board.pop(self.board.index(hero1))
     self.bench.pop(self.bench.index(hero2))
     self.board.append(hero2)
     self.bench.append(hero1)
+    print('now swapped')
+    print(self.board)
+    print(self.bench)
   
   def getCurrentBoard(self):
     return self.board
