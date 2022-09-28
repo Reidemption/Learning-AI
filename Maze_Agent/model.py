@@ -65,7 +65,7 @@ class Model:
         return (self.mState.mX_Location, self.mState.mY_Location)
     
     def getLegalActions(self):
-        return ["L", "R","U","D"]
+        return self.mState.validMoves()
     
     def done(self):
         if self.GoalTest() == True:

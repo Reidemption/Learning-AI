@@ -229,15 +229,37 @@ class Maze:
          
         self.mY_Location = new_y
         
+    def possibleUp(self):
+        new_y = self.mY_Location - 1
+        if self.boundary_check(self.mX_Location, new_y) and self.check_walls(self.mX_Location, new_y):
+            return True
+        return False
+    def possibleDown(self):
+        new_y = self.mY_Location + 1
+        if self.boundary_check(self.mX_Location, new_y) and self.check_walls(self.mX_Location, new_y):
+            return True
+        return False
+    def possibleRight(self):
+        new_x = self.mX_Location + 1
+        
+        if self.boundary_check(new_x, self.mY_Location) and self.check_walls(new_x, self.mY_Location):
+            return True
+        return False
+    def possibleLeft(self):
+        new_x = self.mX_Location - 1
+        if self.boundary_check(new_x, self.mY_Location) and self.check_walls(new_x, self.mY_Location):
+            return True
+        return False
+        
     def validMoves(self):
         actions = []
-        if self.up():
+        if self.possibleUp():
             actions.append("U")
-        if self.down():
+        if self.possibleDown():
             actions.append("D")
-        if self.left():
+        if self.possibleLeft():
             actions.append("L")
-        if self.right():
+        if self.possibleRight():
             actions.append("R")
         return actions
         
