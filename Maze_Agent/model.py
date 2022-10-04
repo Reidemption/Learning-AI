@@ -55,7 +55,6 @@ class Model:
             self.mState.up() 
         else:
             self.mState.down()
-            
     
     def getObservable(self):
         # returns the current position of the agent in the maze, maze map, wall hits and steps
