@@ -1,5 +1,8 @@
 from BubbleModel import BubbleModel
 import random
+from collections import deque
+import copy
+
 
 class RationalAgent:
 
@@ -8,13 +11,31 @@ class RationalAgent:
     
     def agentFunction(self,percepts):
         self.model.updateFromPercepts(percepts)
-        actions = self.model.actions()
-        print('ACTIONS',actions)
-        action = self.bestMoveFromActions(actions)
-        print('ACTION: ',action)
-        self.model.printState()
-        print('')
-        return action
+        # create a stack
+        frontier = deque()
+        frontier.append((copy.deepcopy(self.model), None))
+        while len(list(frontier)) > 0:
+          state = frontier.pop()
+          if state[0].goalTest():
+            child_node = parent_node[0]
+            parent_node = parent_node[1]
+            while parent_node != None:
+              child_node = parent_node[0]
+              parent_node = parent_node[1]
+            return self.bestMoveFromActions(state[1])
+        
+          # actions = self.model.actions()
+          # print('ACTIONS',actions)
+          for action in state[0].actions():
+            print(state[0].actions())
+            new_state = state[0].result(action)
+            print('NS',new_state)
+            frontier.append((new_state, state))
+        # action = self.bestMoveFromActions(actions)
+        # print('ACTION: ',action)
+        # self.model.printState()
+        # print('')
+        # return action
       
     def bestMoveFromActions(self, actions):
       move = ''
@@ -29,8 +50,8 @@ class RationalAgent:
             move = action
       
       if best_move_rating == 0 or move == '':
-        alt_choices = [('swap', None), ('dump', None)]
-        next_best = random.choice(alt_choices)
+        
+        next_best = random.choice(actions)
         print('best move not found. choosing random action:', next_best)
         return next_best
       else:

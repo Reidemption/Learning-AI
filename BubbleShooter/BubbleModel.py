@@ -150,14 +150,14 @@ class BubbleModel:
         else:
             return False
 
-    def result(self, action, pos):
+    def result(self, action):
         bubbleModelCopy = deepcopy(self)
-        if action == "swap":
+        if action[0] == "swap":
             bubbleModelCopy.swapBubbles()
-        elif action == "dump":
+        elif action[0] == "dump":
             bubbleModelCopy.dumpBubble()
-        elif action == "shoot":
-            bubbleModelCopy.shootBubble(pos)
+        elif action[0] == "shoot":
+            bubbleModelCopy.shootBubble(action[1])
         return bubbleModelCopy
 
     def applyAction(self, action):
