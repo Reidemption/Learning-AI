@@ -17,33 +17,35 @@ class RationalAgent:
         return action
       
     def bestMoveFromActions(self, actions):
-      best_move = None
-      possible_moves = []
-      next_move = self.model.sBubbles[0]
-      for i in range(self.model.numRows):
-        for j in range(self.model.numCols):
-          if self.model.pBubbles[i][j] == 0: #starting this will be the bottom row. I will want to check the row above it to find if any are the same color, and if so, shoot that one.
-            for k in range(i):
-              if self.model.pBubbles[k][j] == next_move: #if the k is the same as the next bubble, shoot it
-                if self.nearMatches(k,j, next_move):
-                  best_move = ('shoot', (i,j))
-                  if best_move not in possible_moves:
-                    possible_moves.append(best_move)
-          # best_move = ('shoot', (i,j))
-      if best_move and best_move in actions:
-        print(possible_moves)
-        print('best move was calculated to be:', best_move)
-        return random.choice(possible_moves) #return what could potentially be the best move
-      next_best = random.choice(actions)
-      print('best move not found. choosing random action:', next_best)
-      return next_best
+      move = ''
+      # actions will have my 'possible_moves' list
+      # I need to check each action to see which will be the best.
+      best_move_rating = 0
+      for action in actions:
+        if action[0] == 'shoot':
+          score = self.nearMatches(action[1][0], action[1][1], self.model.sBubbles[0])
+          if score > best_move_rating:
+            best_move_rating = score
+            move = action
+      
+      if best_move_rating == 0 or move == '':
+        alt_choices = [('swap', None), ('dump', None)]
+        next_best = random.choice(alt_choices)
+        print('best move not found. choosing random action:', next_best)
+        return next_best
+      else:
+        print('best move found:', move)
+        return move
     
     def nearMatches(self, x, y, current_color):
+      goodness = 0
       #check left of current location, if same color return true
-      if self.model.pBubbles[x-1][y] == current_color:
-        return True
-      if self.model.pBubbles[x+1][y] == current_color:
-        return True
-      if self.model.pBubbles[x][y-1] == current_color:
-        return True     
-      return False 
+      if x < 5 and x > 0 and y < 5:
+        if self.model.pBubbles[x-1][y] == current_color:
+          goodness += 1
+        if self.model.pBubbles[x-1][y+1] == current_color:
+          goodness += 1
+        if y > 0:
+          if self.model.pBubbles[x-1][y-1] == current_color:
+            goodness += 1     
+      return goodness 
