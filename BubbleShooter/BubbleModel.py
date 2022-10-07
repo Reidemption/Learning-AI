@@ -129,13 +129,17 @@ class BubbleModel:
             pShots = self.getShootPositions()
             for shot in pShots:
                 pActions.append(("shoot",shot))
-        if len(self.sBubbles) >= 2:
-            pActions.append(("swap",None))
-        if len(self.sBubbles) > 0:
-            pActions.append(("dump",None))
+        # if len(self.sBubbles) >= 2:
+        #     pActions.append(("swap",None))
+        # if len(self.sBubbles) > 0:
+        #     pActions.append(("dump",None))
         return pActions
 
-    def goalTest(self):
+    def goalTest(self, score=-900):
+        if score <= self.performanceMeasure():
+            return True
+        if len(self.sBubbles) == 0:
+            return True
         for row in self.pBubbles:
             for bubble in row:
                 if bubble == 0:
@@ -167,6 +171,15 @@ class BubbleModel:
             self.dumpBubble()
         elif action[0] == "shoot":
             self.shootBubble(action[1])
+            
+    def performanceMeasure(self):
+        shotsLeft = len(self.sBubbles)
+        bubblesLeft = 0
+        for i in range(self.numRows):
+            for j in range(self.numCols):
+                if self.pBubbles[i][j] != 0:
+                    bubblesLeft += 1
+        return shotsLeft * 20 + bubblesLeft * -50
 
 # Things to Add
     # Floating bubbles are dropped from board

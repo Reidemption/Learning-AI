@@ -1,8 +1,6 @@
 from BubbleModel import BubbleModel
 import random
-from collections import deque
 import copy
-
 
 class RationalAgent:
 
@@ -12,32 +10,29 @@ class RationalAgent:
     def agentFunction(self,percepts):
         self.model.updateFromPercepts(percepts)
         # create a stack
-        frontier = deque()
-        frontier.append((copy.deepcopy(self.model), None))
-        while len(list(frontier)) > 0:
+        frontier = []
+        frontier.append((copy.deepcopy(self.model), None, None))
+        while len(frontier) > 0:
+          # print(len(frontier))
           state = frontier.pop()
-          if state[0].goalTest():
-            child_node = parent_node[0]
-            parent_node = parent_node[1]
-            while parent_node != None:
+          if state[0].goalTest(-900):
+            print("Goal State Found!")
+            child_node = state[0]
+            parent_node = state[1]
+            action = state[2]
+            while parent_node[1] != None:
+              # print('child: ',child_node,'\nparent: ', parent_node, '\naction: ',action)
+              action = parent_node[2]
               child_node = parent_node[0]
               parent_node = parent_node[1]
-            return self.bestMoveFromActions(state[1])
+            return action
         
-          # actions = self.model.actions()
-          # print('ACTIONS',actions)
           for action in state[0].actions():
-            print(state[0].actions())
             new_state = state[0].result(action)
-            print('NS',new_state)
-            frontier.append((new_state, state))
-        # action = self.bestMoveFromActions(actions)
-        # print('ACTION: ',action)
-        # self.model.printState()
-        # print('')
-        # return action
-      
-    def bestMoveFromActions(self, actions):
+            frontier.append((new_state, state, action))
+            
+          
+"""     def bestMoveFromActions(self, actions):
       move = ''
       # actions will have my 'possible_moves' list
       # I need to check each action to see which will be the best.
@@ -70,3 +65,5 @@ class RationalAgent:
           if self.model.pBubbles[x-1][y-1] == current_color:
             goodness += 1     
       return goodness 
+    
+     """

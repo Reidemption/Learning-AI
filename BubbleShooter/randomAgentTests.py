@@ -19,9 +19,11 @@ def main():
     while not env.model.done():
         percepts = env.model.getObservablePercepts()
         action = agent.agentFunction(percepts)
+        print(action)
         env.model.applyAction(action)
     env.model.printState()
-    print(performanceMeasure(env.model))
+    # print(performanceMeasure(env.model))
+    print(env.model.performanceMeasure())
 
 
 main()
