@@ -11,7 +11,7 @@ class Agent:
     actions = self.model.Actions(percepts)
     action = random.choice(actions)
     return action
-  
+   
 def main():
   env = game.Environment() # assumes environment is randomly populated among possible environments.
   agent = Agent() # assumes random agent class exists.

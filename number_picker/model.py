@@ -7,11 +7,11 @@ class NumberPickerModel:
     return
   
   def printState(self, state):
-    return state.state
+    return state
   
   def getLegalActions(self, state):
     actions = []
-    if len(state.state) > 0:
+    if len(state) > 0:
       actions.append(1)
       actions.append(-1)
     else:

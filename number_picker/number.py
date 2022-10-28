@@ -4,15 +4,21 @@ import hashlib
 
 class Environment:
   def __init__(self, seed, size):
-    self.state = self.populateState(seed)
+    self.state = []
+    self.populateState(seed, size)
     
   def populateState(self, seed, size):
-    hash = seed
+    hash = repr(seed).encode()
     i = 0
+    print(size)
     while i < size:
         hash = hashlib.md5(hash).digest()
         for c in hash:
+          if i < size:
             self.state.append(c)
+            i += 1
+          else:
+            break
     print(self.state)
     
   def applyAction(self, action):
@@ -38,5 +44,10 @@ class Environment:
   
   def GoalTest(self):
     if len(self.state) == 0:
+      return True
+    return False
+  
+  def done(self):
+    if self.GoalTest():
       return True
     return False
