@@ -55,23 +55,19 @@ def main():
   agent2 = Agent() # multi agent environment
   while not env.done():
       # env.showState()
-      print('in while')
-      percepts = env.getPercepts()
-      print(percepts)
-      action = agent.decideAction(percepts)
-      print(action)
-      #print(action)
-      env.applyAction(action)
-      for player in env.players:
-        env.generateUserShop(player)
-      if env.GoalTest():
-        env.done = True
+      players = [agent, agent2] # multi agent environment
+      print('while loopage')
       
+      for i,player in enumerate(players):
+        percepts = env.getPercepts()
+        print('percepts:', percepts)
+        action = player.decideAction(percepts)
+        print('action:', action)
+        env.applyAction(action, i+1)
+        if env.GoalTest():
+          # env.done = True
+          break
       
-      #percepts = env.getObservablePercepts()
-      #action2 = agent2.agentFunction(percepts)
-      #env.applyAction(action2)
-
   return
 
 

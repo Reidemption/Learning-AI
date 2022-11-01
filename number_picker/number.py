@@ -6,6 +6,7 @@ class Environment:
   def __init__(self, seed, size):
     self.state = []
     self.populateState(seed, size)
+    self.players = {'score1': 0, 'score2': 0}
     
   def populateState(self, seed, size):
     hash = repr(seed).encode()
@@ -21,13 +22,19 @@ class Environment:
             break
     print(self.state)
     
-  def applyAction(self, action):
+  def applyAction(self, action, player):
+    value = 0
     if action == 1: #first item in state
-      return self.state.pop(0)
+      value = self.state.pop(0)
     elif action == -1: #last item in state array
-      return self.state.pop()
+      value = self.state.pop()
     else:
       print("Invalid action:", action)
+    if player == 1:
+      self.players['score1'] += value
+    elif player == 2:
+      self.players['score2'] += value
+    return value
     
   def Result(self, player, action):
     new_state = player.deepcopy()
@@ -49,5 +56,7 @@ class Environment:
   
   def done(self):
     if self.GoalTest():
+      print('Game Over.')
+      print('player1: ', self.players['score1'], '\nplayer2: ', self.players['score2'])
       return True
     return False
