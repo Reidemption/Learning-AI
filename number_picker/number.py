@@ -73,4 +73,4 @@ class Environment:
     return False
   
   def Utility(self):
-    return self.players['score1'] - self.players['score2']
+    return abs(self.players['score1'] - self.players['score2'])

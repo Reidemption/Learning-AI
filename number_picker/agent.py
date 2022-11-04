@@ -70,7 +70,6 @@ def main():
   while not env.done():
       # env.showState()
       players = [agent, agent2] # multi agent environment
-      print('\n')
       
       for i,player in enumerate(players):
         percepts = env.getPercepts()
@@ -81,6 +80,7 @@ def main():
         else: #player2  
           action = player.decideAction(percepts)
         print('action:', action)
+        print('\n')
         env.applyAction(action, i+1)
         if env.GoalTest():
           # env.done = True
