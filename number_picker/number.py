@@ -1,7 +1,7 @@
 # equivalent of game.py; maze.py; or BubbleModel.py
 import random
 import hashlib 
-
+import copy
 class Environment:
   def __init__(self, seed, size):
     self.state = []
@@ -22,6 +22,21 @@ class Environment:
             break
     print(self.state)
     
+  def updatePercepts(self, state):
+    self.state = state
+    
+  
+  def getLegalActions(self):
+    actions = []
+    if len(self.state) > 0:
+      actions.append(1)
+      actions.append(-1)
+    elif len(self.state) == 0:
+      actions.append(0)  
+    else:
+      return []
+    return actions
+    
   def applyAction(self, action, player):
     value = 0
     if action == 1: #first item in state
@@ -37,14 +52,10 @@ class Environment:
     return value
     
   def Result(self, player, action):
-    new_state = player.deepcopy()
-    if action == 1:
-      new_state.applyAction(1)
-    elif action == -1:
-      new_state.applyAction(-1)
+    if action == -1 or action == 1:
+      self.applyAction(action, player)
     else: 
       print("Invalid action:", action)
-    return new_state
       
   def getPercepts(self):
     return self.state
@@ -60,3 +71,6 @@ class Environment:
       print('player1: ', self.players['score1'], '\nplayer2: ', self.players['score2'])
       return True
     return False
+  
+  def Utility(self):
+    return self.players['score1'] - self.players['score2']
