@@ -33,17 +33,20 @@ class Plant:
     return ['water', 'wait', 'change soil', 'light', 'remove light']
   
   def changeSoil(self):
-    self.plant['soil_quality'] = .8
+    self.plant['soil_quality'] += .8
     
   def moveIntoLight(self):
     self.plant['inLight'] = True
     
   def removeFromLight(self):
     self.plant['inLight'] = False
+    
+  def waterPlant(self):
+    self.plant['water_levels'] += 1.0
   
   def applyAction(self, action):
     if action == 'water':
-      self.plant['water_levels'] += 0.3
+      self.waterPlant()
     elif action == 'wait':
       pass
     elif action == 'change soil':
@@ -61,7 +64,7 @@ class Plant:
     pass
   
   def GoalTest(self):
-    if self.plant['days'] == 30 and self.plant['alive'] == False:
+    if (self.plant['days'] <= 29 and self.plant['time'] <= 23) and self.plant['alive'] : #if the simulation has run for less than 30 days and the plant is still alive
       return False
     return True
     
@@ -72,24 +75,33 @@ class Plant:
     return False
   
   def plantAlive(self):
-    if self.plant['water_levels'] <= 0.2 or self.plant['soil_quality'] <= .1 or self.plant['light_levels'] <= 0:
+    if self.plant['water_levels'] <= 0.2 or self.plant['water_levels'] >= 3.0:
+      print('Watered the plant too often.')
       self.plant['alive'] = False
-    return self.plant['alive']
+    
+    if self.plant['soil_quality'] <= .1 or self.plant['soil_quality'] >= 2.5:
+      self.plant['alive'] = False
+      print('Changed soil too often.')
+      
+    if self.plant['light_levels'] <= 0.0 or self.plant['light_levels'] >= 3.0:
+      self.plant['alive'] = False
+      print('Exposed the plant to too much light.')
   
   def Utility(self):
     pass
   
   def agePlant(self):
-    if self.plant['time'] <= 17 and self.plant['time'] >= 7:
+    if self.plant['time'] <= 17 and self.plant['time'] >= 7 and self.plant['inLight']:
       self.plant['light_levels'] += 0.727272
+    elif self.plant['time'] <= 17 and self.plant['time'] >= 7 and not self.plant['inLight']:
+      self.plant['light_levels'] -= 0.363636
     if self.plant['time'] >= 23:
       self.plant['time'] = 0
       self.plant['days'] += 1
     else:
       self.plant['time'] += 1
-    self.plant['water_levels'] -= 0.1
+    self.plant['water_levels'] -= 0.00555
     self.plant['soil_quality'] -= 0.0012987
-    self.plant['light_levels'] -= 0.363636
     self.plantAlive()
     
     

@@ -14,6 +14,9 @@ class Agent:
     action = random.choice(actions)
     return action
   
+  #A* search algorithm
+  
+  
 def main():
   seed = 1234567890
   environment = env.Plant(seed)
@@ -26,9 +29,6 @@ def main():
     print('action:', action)
     print('\n')
     environment.applyAction(action)
-    if environment.GoalTest():
-      print('Goal Test Passed')
-      break
   return
 
 
