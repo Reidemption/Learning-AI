@@ -1,0 +1,28 @@
+want to water the plants 2 times a week
+
+have plant in the sunlight about 3-8 hours a day
+
+change soil once per month
+
+Once every 180 days
+
+0.005
+
+0.5
+0.4
+0.2
+
+
+30 days * 24 hours = 720 actions during the lifetime
+
+light_levels -= 0.05
+light_levels = .8
+
+I want 
+
+7 8 9 10 11 12 13 14 15 16 17
+
+11 daylight hours* 30 days = 330 daylight hours in a month 
+
+In one month, there are 330 daylight hours. In that month, they should be in the light
+
