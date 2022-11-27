@@ -24,5 +24,6 @@ I want
 
 11 daylight hours* 30 days = 330 daylight hours in a month 
 
-In one month, there are 330 daylight hours. In that month, they should be in the light
+In one month, there are 330 daylight hours. In that month, they should be in the light 4 hours during the day.
 
+should be 390 moves of 'wait'

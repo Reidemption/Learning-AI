@@ -13,6 +13,18 @@ class Plant:
       'light_levels': .8,
       'inLight': False,
     }
+  
+  def cost(self,action):
+    if action == 'water':
+      return 99.988
+    elif action == 'wait':
+      return 99.458
+    elif action == 'change soil':
+      return 99.999
+    elif action == 'light':
+      return 99.636
+    elif action == 'remove light':
+      return 99.363
     
   def initializePlant(self, seed):
     random.seed(seed)
@@ -42,7 +54,7 @@ class Plant:
     self.plant['inLight'] = False
     
   def waterPlant(self):
-    self.plant['water_levels'] += 1.0
+    self.plant['water_levels'] += 0.01
   
   def applyAction(self, action):
     if action == 'water':
@@ -59,20 +71,20 @@ class Plant:
       print("Invalid action:", action)
     self.agePlant()
     
-      
-  def Result(self, action):
-    pass
   
   def GoalTest(self):
-    if (self.plant['days'] <= 29 and self.plant['time'] <= 23) and self.plant['alive'] : #if the simulation has run for less than 30 days and the plant is still alive
-      return False
-    return True
+    if (self.plant['days'] >= 29 and self.plant['time'] >= 23) and self.plant['alive'] : #if the simulation has run for less than 30 days and the plant is still alive
+      return True
+    return False
     
   def done(self):
     if self.GoalTest():
       print("Plant simulation has ended with the plant alive") if self.plant['alive'] else print("Plant simulation has ended with the plant dead")
       return True
     return False
+  
+  def isPlantAlive(self):
+    return self.plant['alive']
   
   def plantAlive(self):
     if self.plant['water_levels'] <= 0.2 or self.plant['water_levels'] >= 3.0:
@@ -86,9 +98,6 @@ class Plant:
     if self.plant['light_levels'] <= 0.0 or self.plant['light_levels'] >= 3.0:
       self.plant['alive'] = False
       print('Exposed the plant to too much light.')
-  
-  def Utility(self):
-    pass
   
   def agePlant(self):
     if self.plant['time'] <= 17 and self.plant['time'] >= 7 and self.plant['inLight']:
