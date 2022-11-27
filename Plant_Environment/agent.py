@@ -3,6 +3,7 @@ import random
 import copy 
 from collections import deque
 import queue
+import heapq
   
 class Agent:
   def __init__(self, seed):
@@ -44,25 +45,32 @@ class Agent:
     self.model.updatePercepts(percepts)
     if self.model.GoalTest():
       return None
+    # frontier = queue.PriorityQueue(720)
     frontier = queue.PriorityQueue(720)
     model_copy = copy.deepcopy(self.model)
+    passes = 0
     # print('model copy',model_copy)
-    frontier.put((0,model_copy))
+    frontier.put((0,(model_copy,[])))
     while not frontier.empty():
+      passes += 1
+      print(passes)
       state = frontier.get()
       # print('state 1',state[1])
-      if state[1].GoalTest():
+      if state[1][0].GoalTest():
         print('goal test passed.')
-        print(state[0])
-        return state[0] #TODO: should return the action required to get to the state
-      for action in state[1].getLegalActions():
-        new_state = copy.deepcopy(state[1])
+        print('state', state)
+        return state[1][1][0] #TODO: should return the action required to get to the state
+      for action in state[1][0].getLegalActions():
+        past_actions = state[1][1].copy()
+        past_actions.append(action)
+        new_state = copy.deepcopy(state[1][0])
         new_state.applyAction(action)
-        new_cost = state[0] + state[1].cost(action)
+        new_cost = state[0] + state[1][0].cost(action)
         if new_state.isPlantAlive():
-          print('put in frontier')
-          frontier.put((new_cost, new_state))
-        # print((new_cost, new_state))
+          # print('new cost', new_cost)
+          frontier.put((new_cost, (new_state, past_actions)))
+          # '<' not supported between instances of 'Plant' and 'Plant' 
+          # This error probably comes from trying to compare two plants with the same cost
         
 
   
@@ -72,8 +80,9 @@ def main():
   agent = Agent(seed)
   while not environment.done():
     percepts = environment.getPercepts()
-    # print('percepts:', percepts)
+    print('percepts:', percepts)
     action = agent.uniformCostSearch(percepts)
+    print('while action:', action)
     # action = agent.decideRandomAction(percepts)
     # print('action:', action)
     # print('\n')
