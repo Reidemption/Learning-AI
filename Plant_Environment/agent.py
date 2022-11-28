@@ -46,14 +46,16 @@ class Agent:
     if self.model.GoalTest():
       return None
     # frontier = queue.PriorityQueue(720)
-    frontier = queue.PriorityQueue(720)
+    frontier = queue.PriorityQueue(5000)
+    MAX_DEPTH = 100
     model_copy = copy.deepcopy(self.model)
     passes = 0
     # print('model copy',model_copy)
     frontier.put((0,(model_copy,[])))
+    visited = []
     while not frontier.empty():
       passes += 1
-      print(passes)
+      print('passes',passes, 'with frontier size',frontier.qsize())
       state = frontier.get()
       # print('state 1',state[1])
       if state[1][0].GoalTest():
@@ -66,8 +68,9 @@ class Agent:
         new_state = copy.deepcopy(state[1][0])
         new_state.applyAction(action)
         new_cost = state[0] + state[1][0].cost(action)
-        if new_state.isPlantAlive():
+        if new_state.isPlantAlive() and new_cost not in visited:
           # print('new cost', new_cost)
+          visited.append(new_cost)
           frontier.put((new_cost, (new_state, past_actions)))
           # '<' not supported between instances of 'Plant' and 'Plant' 
           # This error probably comes from trying to compare two plants with the same cost

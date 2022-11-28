@@ -16,15 +16,15 @@ class Plant:
   
   def cost(self,action):
     if action == 'water':
-      return 99.988
+      return .98
     elif action == 'wait':
-      return 99.458
+      return .1
     elif action == 'change soil':
-      return 99.999
+      return .99
     elif action == 'light':
-      return 99.636
+      return .63
     elif action == 'remove light':
-      return 99.363
+      return .36
     
   def initializePlant(self, seed):
     random.seed(seed)
@@ -88,16 +88,16 @@ class Plant:
   
   def plantAlive(self):
     if self.plant['water_levels'] <= 0.2 or self.plant['water_levels'] >= 3.0:
-      print('Watered the plant too often.')
+      print('Watered the plant too often or not enough.')
       self.plant['alive'] = False
     
     if self.plant['soil_quality'] <= .1 or self.plant['soil_quality'] >= 2.5:
       self.plant['alive'] = False
-      print('Changed soil too often.')
+      print('Changed soil too often or not enough.')
       
     if self.plant['light_levels'] <= 0.0 or self.plant['light_levels'] >= 3.0:
       self.plant['alive'] = False
-      print('Exposed the plant to too much light.')
+      print('Exposed the plant to too much light or not enough.')
   
   def agePlant(self):
     if self.plant['time'] <= 17 and self.plant['time'] >= 7 and self.plant['inLight']:
