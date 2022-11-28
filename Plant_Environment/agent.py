@@ -53,14 +53,15 @@ class Agent:
     # print('model copy',model_copy)
     frontier.put((0,(model_copy,[])))
     visited = []
+    current_depth = 0
     while not frontier.empty():
       passes += 1
       print('passes',passes, 'with frontier size',frontier.qsize())
       state = frontier.get()
       # print('state 1',state[1])
-      if state[1][0].GoalTest():
+      if state[1][0].GoalTest() or current_depth >= MAX_DEPTH:
         print('goal test passed.')
-        print('state', state)
+        # print('state', state)
         return state[1][1][0] #TODO: should return the action required to get to the state
       for action in state[1][0].getLegalActions():
         past_actions = state[1][1].copy()
@@ -74,6 +75,8 @@ class Agent:
           frontier.put((new_cost, (new_state, past_actions)))
           # '<' not supported between instances of 'Plant' and 'Plant' 
           # This error probably comes from trying to compare two plants with the same cost
+          
+      current_depth += 1
         
 
   
@@ -81,15 +84,33 @@ def main():
   seed = 1234567890
   environment = env.Plant(seed)
   agent = Agent(seed)
+  actions_done = []
   while not environment.done():
     percepts = environment.getPercepts()
     print('percepts:', percepts)
     action = agent.uniformCostSearch(percepts)
     print('while action:', action)
-    # action = agent.decideRandomAction(percepts)
-    # print('action:', action)
-    # print('\n')
+    #append wait unless the last action was wait
+    if action != 'wait':
+      actions_done.append(action)
+    if action == 'wait':
+      if len(actions_done) > 0:
+        if actions_done[-1] != 'wait':
+          actions_done.append(action)
+        else:
+          # going to add a number showing how many times wait has been called in a row.
+          number_of_calls = actions_done[-1] = actions_done[-1].split(' ')
+          if len(number_of_calls) > 1: #have already added a multiplier
+            number_of_calls[2] = int(number_of_calls[2]) + 1
+            actions_done[-1] = 'wait x ' + str(number_of_calls[2])
+          else:
+            actions_done[-1] = 'wait x 2'
+      else:
+        actions_done.append(action)
+        
+      
     environment.applyAction(action)
+  print('actions done:', actions_done)
   return
 
 
