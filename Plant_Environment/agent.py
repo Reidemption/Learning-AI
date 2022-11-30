@@ -6,8 +6,8 @@ import queue
 import heapq
   
 class Agent:
-  def __init__(self, seed):
-    self.model = env.Plant(seed)
+  def __init__(self, seed1, seed2, seed3):
+    self.model = env.Plant(seed1, seed2, seed3)
     
   # random action
   def decideRandomAction(self, percepts):
@@ -53,14 +53,13 @@ class Agent:
     # print('model copy',model_copy)
     frontier.put((0,(model_copy,[])))
     visited = []
-    current_depth = 0
     while not frontier.empty():
       passes += 1
-      print('passes',passes, 'with frontier size',frontier.qsize())
+      # print('passes',passes, 'with frontier size',frontier.qsize())
       state = frontier.get()
       # print('state 1',state[1])
-      if state[1][0].GoalTest() or current_depth >= MAX_DEPTH:
-        print('goal test passed.')
+      if state[1][0].GoalTest() or frontier.qsize() >= MAX_DEPTH:
+        # print('goal test passed.')
         # print('state', state)
         return state[1][1][0] #TODO: should return the action required to get to the state
       for action in state[1][0].getLegalActions():
@@ -76,33 +75,39 @@ class Agent:
           # '<' not supported between instances of 'Plant' and 'Plant' 
           # This error probably comes from trying to compare two plants with the same cost
           
-      current_depth += 1
         
 
   
 def main():
-  seed = 1234567890
-  environment = env.Plant(seed)
-  agent = Agent(seed)
+  seed1 = random.randint(1,99999999)
+  seed2 = random.randint(1,99999999)
+  seed3 = random.randint(1,99999999)
+  # seed1 = 84996152
+  # seed2 = 30659490
+  # seed3 = 40728344
+  print('seed1',seed1,'seed2',seed2, 'seed3',seed3)
+  environment = env.Plant(seed1, seed2, seed3)
+  agent = Agent(seed1, seed2, seed3)
   actions_done = []
+  environment.printState()
   while not environment.done():
     percepts = environment.getPercepts()
-    print('percepts:', percepts)
+    # print('percepts:', percepts)
     action = agent.uniformCostSearch(percepts)
-    print('while action:', action)
+    # print('while action:', action)
     #append wait unless the last action was wait
     if action != 'wait':
       actions_done.append(action)
     if action == 'wait':
       if len(actions_done) > 0:
-        if actions_done[-1] != 'wait':
+        if 'wait' not in actions_done[-1]:
           actions_done.append(action)
         else:
           # going to add a number showing how many times wait has been called in a row.
-          number_of_calls = actions_done[-1] = actions_done[-1].split(' ')
+          number_of_calls = actions_done[-1].split(' ')
           if len(number_of_calls) > 1: #have already added a multiplier
             number_of_calls[2] = int(number_of_calls[2]) + 1
-            actions_done[-1] = 'wait x ' + str(number_of_calls[2])
+            actions_done[-1] = 'wait x ' + str(number_of_calls[2]) 
           else:
             actions_done[-1] = 'wait x 2'
       else:

@@ -2,16 +2,15 @@ import random
 import copy
 
 class Plant:
-  def __init__(self, seed):
+  def __init__(self, seed1, seed2, seed3):
     self.plant = {
       'time': 0,
       'days': 0,
-      'water_levels': self.initializePlant(seed),
+      'water_levels': self.initializePlant(seed1),
       'alive': True,
-      'soil_quality':self.initializePlant(seed),
-      'consecutive_light_days': 0,
-      'light_levels': .8,
-      'inLight': False,
+      'soil_quality':self.initializePlant(seed2),
+      'light_levels': self.initializePlant(seed3),
+      'inLight': self.initializeInLight(),
     }
   
   def cost(self,action):
@@ -28,10 +27,13 @@ class Plant:
     
   def initializePlant(self, seed):
     random.seed(seed)
-    water_or_soil = random.uniform(0,1)
-    while water_or_soil < 0.3 and water_or_soil > 0.8:
-      water_or_soil = random.uniform(0,1)
+    water_or_soil = random.random()
+    while water_or_soil < 0.3 or water_or_soil > 0.8:
+      water_or_soil = random.random()
     return water_or_soil
+  
+  def initializeInLight(self):
+    return random.choice([True, False])
   
   def updatePercepts(self, state):
     self.plant = state
@@ -41,8 +43,11 @@ class Plant:
   
   def getLegalActions(self):
     if self.plant['days'] >= 30 or not self.plant['alive']:
-      return
-    return ['water', 'wait', 'change soil', 'light', 'remove light']
+      return []
+    if self.plant['inLight']:
+      return ['water', 'wait', 'change soil', 'remove light']
+    return ['water', 'wait', 'change soil', 'light']
+      
   
   def changeSoil(self):
     self.plant['soil_quality'] += .8
@@ -54,7 +59,7 @@ class Plant:
     self.plant['inLight'] = False
     
   def waterPlant(self):
-    self.plant['water_levels'] += 0.01
+    self.plant['water_levels'] += 0.5
   
   def applyAction(self, action):
     if action == 'water':
@@ -87,7 +92,7 @@ class Plant:
     return self.plant['alive']
   
   def plantAlive(self):
-    if self.plant['water_levels'] <= 0.2 or self.plant['water_levels'] >= 3.0:
+    if self.plant['water_levels'] <= 0.2 or self.plant['water_levels'] >= 1.0:
       # print('Watered the plant too often or not enough.')
       self.plant['alive'] = False
     
@@ -113,4 +118,8 @@ class Plant:
     self.plant['soil_quality'] -= 0.0012987
     self.plantAlive()
     
-    
+  def printState(self):
+    print("Water Levels:", self.plant['water_levels'])
+    print("Soil Quality:", self.plant['soil_quality'])
+    print("Light Levels:", self.plant['light_levels'])
+    print("In Light:", self.plant['inLight'])
